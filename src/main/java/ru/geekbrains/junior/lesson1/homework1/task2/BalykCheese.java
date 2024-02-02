@@ -1,12 +1,12 @@
-package ru.geekbrains.junior.lesson1.task2;
+package ru.geekbrains.junior.lesson1.homework1.task2;
 
 /**
- * Шоколадный батончик
+ * Сыр Балыковый (Балык)
  */
-public class ChocolateBar implements Snack{
+public class BalykCheese implements Snack {
     @Override
     public boolean getProteins() {
-        return false;
+        return true;
     }
 
     @Override
@@ -16,11 +16,11 @@ public class ChocolateBar implements Snack{
 
     @Override
     public boolean getCarbohydrates() {
-        return true;
+        return false;
     }
 
     @Override
     public String getName() {
-        return "Шоколадный батончик";
+        return "Сыр (Балык)";
     }
 }

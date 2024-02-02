@@ -1,12 +1,12 @@
-package ru.geekbrains.junior.lesson1.task2;
+package ru.geekbrains.junior.lesson1.homework1.task2;
 
 /**
- * Замороженные ягоды
+ * Курица
  */
-public class DumplingsBerries implements SemiFinishedFood{
+public class Chicken implements HealthyFood{
     @Override
     public boolean getProteins() {
-        return false;
+        return true;
     }
 
     @Override
@@ -16,11 +16,11 @@ public class DumplingsBerries implements SemiFinishedFood{
 
     @Override
     public boolean getCarbohydrates() {
-        return true;
+        return false;
     }
 
     @Override
     public String getName() {
-        return "Замороженные ягоды";
+        return "Курица";
     }
 }

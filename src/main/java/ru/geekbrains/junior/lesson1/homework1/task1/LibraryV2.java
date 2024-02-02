@@ -1,7 +1,6 @@
-package ru.geekbrains.junior.lesson1.task1;
+package ru.geekbrains.junior.lesson1.homework1.task1;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LibraryV2 {
 
