@@ -40,7 +40,7 @@ public class Program {
         System.out.println("Select Query: " + selectQuery);
 
         // Генерация SQL-запроса для обновления
-        String updateQuery = queryBuilder.buildUpdateQuery2(user);
+        String updateQuery = queryBuilder.buildUpdateQuery(user);
         System.out.println("Update Query: " + updateQuery);
 
         String deleteQuery = queryBuilder.buildDeleteQuery(Employee.class,pk);

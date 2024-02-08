@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class QueryBuilder {
 
@@ -14,50 +15,39 @@ public class QueryBuilder {
      * @param obj
      * @return
      */
-    public String buildInsertQuery(Object obj) throws IllegalAccessException {
+    public String buildInsertQuery(Object obj){
         Class<?> clazz = obj.getClass();
         if (!clazz.isAnnotationPresent(Table.class)) {
             return "";
         }
-
         StringBuilder query = new StringBuilder("INSERT INTO ");
+
         Table tableAnnotation = clazz.getAnnotation(Table.class);
-        query
-                .append(tableAnnotation.name())
-                .append(" (");
+        query.append(tableAnnotation.name()).append(" (");
 
         Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(Column.class)) {
-                Column columnAnnotation = field.getAnnotation(Column.class);
-                query
-                        .append(columnAnnotation.name())
-                        .append(", ");
-            }
-        }
+        String columns = Stream.of(fields)
+                .filter(field -> field.isAnnotationPresent(Column.class))
+                .map(field -> field.getAnnotation(Column.class).name())
+                .collect(Collectors.joining(", "));
+        query.append(columns).append(") VALUES (");
 
-        if (query.charAt(query.length() - 2) == ',') {
-            query.delete(query.length() - 2, query.length());
-        }
-        query.append(") VALUES (");
-
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(Column.class)) {
-                field.setAccessible(true);
-
-                //Class<?> fieldType = field.getType();
-                //String n = fieldType.getSimpleName();
-                query.append("'").append(field.get(obj)).append("', ");
-            }
-        }
-
-        if (query.charAt(query.length() - 2) == ',') {
-            query.delete(query.length() - 2, query.length());
-        }
-
-        query.append(")");
+        String values = Stream.of(fields)
+                .filter(field -> field.isAnnotationPresent(Column.class))
+                .map(field -> {
+                    field.setAccessible(true);
+                    try {
+                        return "'" + field.get(obj) + "'";
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        return "";
+                    }
+                })
+                .collect(Collectors.joining(", "));
+        query.append(values).append(")");
 
         return query.toString();
+
     }
 
     /**
@@ -67,7 +57,6 @@ public class QueryBuilder {
      * @param primaryKey
      * @return
      */
-
     public String buildSelectQuery(Class<?> clazz, UUID primaryKey) {
         if(!clazz.isAnnotationPresent(Table.class)){
             return "";
@@ -88,58 +77,8 @@ public class QueryBuilder {
          * @param obj
          * @return
          */
-    public String buildUpdateQuery(Object obj) {
-        Class<?> clazz = obj.getClass();
-        if (!clazz.isAnnotationPresent(Table.class)) {
-            return "";
-        }
 
-        StringBuilder query = new StringBuilder("UPDATE ");
-
-
-        Table tableAnnotation = clazz.getAnnotation(Table.class);
-        query.append(tableAnnotation.name()).append(" SET ");
-
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(Column.class)) {
-                field.setAccessible(true);
-
-                Column columnAnnotation = field.getAnnotation(Column.class);
-                if (columnAnnotation.primaryKey())
-                    continue;
-                try {
-                    query.append(columnAnnotation.name()).append(" = '").append(field.get(obj)).append("', ");
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        if (query.charAt(query.length() - 2) == ',') {
-            query.delete(query.length() - 2, query.length());
-        }
-
-        query.append(" WHERE ");
-
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(Column.class)) {
-                Column columnAnnotation = field.getAnnotation(Column.class);
-                if (columnAnnotation.primaryKey()) {
-                    try {
-                        query.append(columnAnnotation.name()).append(" = '").append(field.get(obj)).append("'");
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-            }
-        }
-
-        return query.toString();
-    }
-
-    public String buildUpdateQuery2(Object obj) throws IllegalAccessException{
+    public String buildUpdateQuery(Object obj) throws IllegalAccessException{
         Class<?> clazz = obj.getClass();
         if(!clazz.isAnnotationPresent(Table.class)){
             return "";
