@@ -1,4 +1,4 @@
-package ru.geekbrains.junior.lesson1;
+package ru.geekbrains.junior.lesson1.homework2;
 
 public class Cat extends Animal{
     boolean isStray;

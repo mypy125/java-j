@@ -1,10 +1,8 @@
-package ru.geekbrains.junior.lesson1;
+package ru.geekbrains.junior.lesson1.homework2;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /*
      Создайте абстрактный класс "Animal" с полями "name" и "age".

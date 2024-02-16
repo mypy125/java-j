@@ -1,0 +1,13 @@
+[ {
+  "name" : "max",
+  "age" : 10,
+  "gpa" : 26.3
+}, {
+  "name" : "philip",
+  "age" : 30,
+  "gpa" : 45.2
+}, {
+  "name" : "serop",
+  "age" : 23,
+  "gpa" : 12.09
+} ]

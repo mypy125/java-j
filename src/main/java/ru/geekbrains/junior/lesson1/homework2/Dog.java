@@ -1,4 +1,4 @@
-package ru.geekbrains.junior.lesson1;
+package ru.geekbrains.junior.lesson1.homework2;
 
 class Dog extends Animal{
     private String breed;
