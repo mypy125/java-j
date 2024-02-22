@@ -3,7 +3,6 @@ package ru.geekbrains.junior.chat.server;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class ClientManager implements Runnable {
 
@@ -68,7 +67,7 @@ public class ClientManager implements Runnable {
         for (ClientManager client : clients) {
             try {
                 if (!client.equals(this) && message != null){
-                //if (!client.name.equals(name) && message != null) {
+//                if (!client.name.equals(name) && message != null) {
                     client.bufferedWriter.write(message);
                     client.bufferedWriter.newLine();
                     client.bufferedWriter.flush();
@@ -86,8 +85,9 @@ public class ClientManager implements Runnable {
             try {
                 // Чтение данных
                 massageFromClient = bufferedReader.readLine();
-                // Отправка данных всем слушателям
+                    // Отправка данных всем слушателям
                 broadcastMessage(massageFromClient);
+
             }
             catch (Exception e){
                 closeEverything(socket, bufferedReader, bufferedWriter);
@@ -95,4 +95,16 @@ public class ClientManager implements Runnable {
             }
         }
     }
+
+
+    private static boolean isPrivate(String msg){
+        return msg.substring(0,1).equals("@");
+    }
+
+
+
+
+
+
+
 }

@@ -12,9 +12,9 @@ import java.util.List;
 
 
 public class FileManagement {
-    public static final String FILE_JSON = "student.json";
-    public static final String FILE_XML = "student.xml";
-    public static final String FILE_BIN = "student.bin";
+    public static final String FILE_JSON = "lesson1/student.json";
+    public static final String FILE_XML = "lesson1/student.xml";
+    public static final String FILE_BIN = "lesson1/student.bin";
     public static final ObjectMapper objectMapper = new ObjectMapper();
     public static final XmlMapper xmlMapper = new XmlMapper();
 
