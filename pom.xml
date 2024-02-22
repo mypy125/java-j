@@ -7,8 +7,13 @@
     <groupId>ru.geekbrains.junior</groupId>
     <artifactId>lesson1</artifactId>
     <version>1.0-SNAPSHOT</version>
-    
-     <dependencies>
+    <packaging>pom</packaging>
+    <modules>
+        <module>chat-client</module>
+        <module>chat-server</module>
+    </modules>
+
+    <dependencies>
         <!-- Добавляем зависимость для Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
