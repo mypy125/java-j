@@ -86,7 +86,7 @@ public class ClientManager implements Runnable {
                 // Чтение данных
                 massageFromClient = bufferedReader.readLine();
                 if(massageFromClient.startsWith("@",5)){
-                    ClientManager client = (ClientManager) searchNameFromMassage(massageFromClient,clients);
+                    ClientManager client = (ClientManager) searchNameFromMassageV2(massageFromClient,clients);
                     if(client != null)privateMessageClient(client,massageFromClient);
 
                 }else {
@@ -94,11 +94,9 @@ public class ClientManager implements Runnable {
                     broadcastMessage(massageFromClient);
                 }
 
-
             }
             catch (Exception e){
                 closeEverything(socket, bufferedReader, bufferedWriter);
-                //break;
             }
         }
     }
@@ -117,19 +115,32 @@ public class ClientManager implements Runnable {
         }
 
     }
-    private Object searchNameFromMassage(String message, HashMap<String, ClientManager> clients){
+//    private Object searchNameFromMassage(String message, HashMap<String, ClientManager> clients){
+//        Object client = null;
+//        StringBuilder sb = new StringBuilder();
+//        int counter = 6;
+//        for (int i = counter; i < message.length(); i++) {
+//            sb.append(message.charAt(i));
+//            client = equalsNameFromMap(sb.toString(), clients);
+//        }
+//        return client;
+//    }
+    private static Object searchNameFromMassageV2(String message, HashMap<?, ?> clients) {
         Object client = null;
-        StringBuilder sb = new StringBuilder();
-        int counter = 6;
-        for (int i = counter; i < message.length(); i++) {
-            sb.append(message.charAt(i));
-            client = equalsNameFromMap(sb.toString(), clients);
+        if (message != null && message.startsWith("@",5)) {
+            String[] names = message.substring(6).split("\\s+");
+
+            for (String name : names) {
+                if (clients.containsKey(name)) {
+                    client = clients.get(name);
+                    break;
+                }
+            }
         }
         return client;
     }
 
-
-    private Object equalsNameFromMap(String s, HashMap<String, ClientManager> clients){
+    private Object equalsNameFromMap(String s, HashMap<?, ?> clients){
         Object clientManager = null;
         if(s != null && clients.containsKey(s)){
             clientManager = clients.get(s);
@@ -137,7 +148,4 @@ public class ClientManager implements Runnable {
         return clientManager;
     }
 
-    public String getName() {
-        return name;
-    }
 }

@@ -1,4 +1,4 @@
-package ru.geekbrains.junior.lesson1;
+package ru.geekbrains.junior.lesson1.homework5;
 
 
 import org.hibernate.Cache;
@@ -12,15 +12,15 @@ public class Program {
     public static <bufferedReader> void main(String[] args) throws IOException {
 
         HashMap<String,String> client = new HashMap<>();
-        client.put("gor","erevan");
-        client.put("max","moscow");
-        client.put("doc","usa");
+        client.put("gor","Yerevan");
+        client.put("max","Moscow");
+        client.put("doc","USA");
 
         BufferedReader  bufferedReader;
         bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         String message = bufferedReader.readLine();
         if(message.startsWith("@")){
-            System.out.println(searchNameFromMassage(message,client));
+            System.out.println(searchNameFromMassageV2(message,client));
         }
 
 
@@ -34,7 +34,7 @@ public class Program {
         return clientManager;
     }
 
-    private static Object searchNameFromMassage(String message, HashMap<String, String> clients){
+    private static Object searchNameFromMassageV1(String message, HashMap<String, String> clients){
         Object client = null;
         StringBuilder sb = new StringBuilder();
         int counter = 1;
@@ -44,7 +44,24 @@ public class Program {
         }
         return client;
     }
+    private static Object searchNameFromMassageV2(String message, HashMap<String, String> clients) {
+        Object client = null;
+        // Проверяем, что сообщение не пустое и начинается с символа '@'
+        if (message != null && message.startsWith("@")) {
+            // Извлекаем подстроку после символа '@' и разбиваем её на слова по пробелам
+            String[] words = message.substring(1).split("\\s+");
 
+            // Перебираем слова из сообщения
+            for (String word : words) {
+                // Если слово есть в списке клиентов, возвращаем соответствующего клиента
+                if (clients.containsKey(word)) {
+                    client = clients.get(word);
+                    break; // Прерываем цикл, если найден клиент
+                }
+            }
+        }
+        return client;
+    }
 
 
 }
