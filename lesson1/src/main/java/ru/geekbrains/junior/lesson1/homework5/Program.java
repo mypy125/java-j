@@ -1,43 +1,50 @@
 package ru.geekbrains.junior.lesson1.homework5;
 
-import java.util.HashMap;
-import java.util.Map;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.concurrent.*;
 
 public class Program {
+    public static final int Threads = 100;
+    public static final int TIME_O = 100;
+    public static final int MIN_P = 0;
+    public static final int MAX_P = 65535;
 
     public static void main(String[] args) {
-        HashMap<String,String> names= new HashMap<>();
 
-        names.put("gor","1");
-        names.put("arkady","2");
-        names.put("stas","3");
-        names.put("gevorg","4");
+        sc("www.maxecommerce.com");
 
-        String name = "@gevorg";
+    }
 
-        if(isPrivate(name)){
-            System.out.println(searchClientFromClients(name, names));
+
+    public static void sc(String hs){
+        System.out.println("scan p:");
+        ExecutorService exec = Executors.newFixedThreadPool(Threads);
+        for(int p = MIN_P; p < MAX_P; p++){
+            var soc = new InetSocketAddress(hs,p);
+            int finalP = p;
+            exec.execute(()->{
+              var address = new InetSocketAddress(hs, finalP);
+                try(var sck = new Socket()){
+                    sck.connect(address,TIME_O);
+                    System.out.printf("hst: %s, p %d is opened\n",hs,finalP);
+                }catch (IOException ignored){
+
+                }
+            });
         }
-
-    }
-
-    public static String searchClientFromClients(String string,HashMap<String,String> map){
-        StringBuilder sb = new StringBuilder();
-        char[] ch = string.substring(1).toCharArray();
-        for(Character c : ch){
-            sb.append(c);
-            if(equalsForMap(sb.toString(), map)){
-               return map.get(sb.toString());
-            }
-
+        exec.shutdown();
+        try {
+            exec.awaitTermination(10,TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        return sb.toString();
+        System.out.println("finish");
+
     }
 
-    private static boolean equalsForMap(String s, HashMap<?,?> map){
-        return map.containsKey(s);
-    }
-    private static boolean isPrivate(String msg){
-        return msg.substring(0,1).equals("@");
-    }
+
+
 }

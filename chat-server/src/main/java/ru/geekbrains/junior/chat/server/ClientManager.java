@@ -2,7 +2,6 @@ package ru.geekbrains.junior.chat.server;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ClientManager implements Runnable {
@@ -18,9 +17,9 @@ public class ClientManager implements Runnable {
             this.socket = socket;
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            clients.put(name,this);
             //TODO: ...
             name = bufferedReader.readLine();
+            clients.put(name,this);
             System.out.println(name + " подключился к чату.");
             broadcastMessage("Server: " + name + " подключился к чату.");
         }
@@ -86,12 +85,13 @@ public class ClientManager implements Runnable {
             try {
                 // Чтение данных
                 massageFromClient = bufferedReader.readLine();
-                if(!isPrivate(massageFromClient)){
+                if(massageFromClient.startsWith("@",5)){
+                    ClientManager client = (ClientManager) searchNameFromMassage(massageFromClient,clients);
+                    if(client != null)privateMessageClient(client,massageFromClient);
+
+                }else {
                     // Отправка данных всем слушателям
                     broadcastMessage(massageFromClient);
-                }else {
-                    ClientManager cl = searchClient(massageFromClient,clients);
-                    broadcastMessageClient(cl,massageFromClient );
                 }
 
 
@@ -104,40 +104,40 @@ public class ClientManager implements Runnable {
     }
 
 
-    private boolean isPrivate(String msg){
-        return msg.substring(0,1).equals("@");
-    }
-    private void broadcastMessageClient(ClientManager client, String message){
 
+    private void privateMessageClient(ClientManager client, String message){
+            ClientManager privatMassage = client;
         try {
-            if (!client.equals(this) && message != null){
+            privatMassage.bufferedWriter.write(message);
+            privatMassage.bufferedWriter.newLine();
+            privatMassage.bufferedWriter.flush();
 
-                client.bufferedWriter.write(message);
-                client.bufferedWriter.newLine();
-                client.bufferedWriter.flush();
-            }
         } catch (Exception e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
         }
 
     }
-    private ClientManager searchClient(String string, HashMap<String,ClientManager> map){
+    private Object searchNameFromMassage(String message, HashMap<String, ClientManager> clients){
+        Object client = null;
         StringBuilder sb = new StringBuilder();
-        char[] ch = string.substring(1).toCharArray();
-        for(Character c : ch){
-            sb.append(c);
-            if(equalsForMap(sb.toString(), map)){
-                return map.get(sb);
-            }
-
+        int counter = 6;
+        for (int i = counter; i < message.length(); i++) {
+            sb.append(message.charAt(i));
+            client = equalsNameFromMap(sb.toString(), clients);
         }
-        return null;
-    }
-
-    private boolean equalsForMap(String s, HashMap<?,?> map){
-        return map.containsKey(s);
+        return client;
     }
 
 
+    private Object equalsNameFromMap(String s, HashMap<String, ClientManager> clients){
+        Object clientManager = null;
+        if(s != null && clients.containsKey(s)){
+            clientManager = clients.get(s);
+        }
+        return clientManager;
+    }
 
+    public String getName() {
+        return name;
+    }
 }
