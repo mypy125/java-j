@@ -1,48 +1,48 @@
-package ru.geekbrains.junior.lesson1.homework5;
+package ru.geekbrains.junior.lesson1;
 
 
+import org.hibernate.Cache;
+
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.util.concurrent.*;
+import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class Program {
-    public static final int Threads = 100;
-    public static final int TIME_O = 100;
-    public static final int MIN_P = 0;
-    public static final int MAX_P = 65535;
+    public static <bufferedReader> void main(String[] args) throws IOException {
 
-    public static void main(String[] args) {
+        HashMap<String,String> client = new HashMap<>();
+        client.put("gor","erevan");
+        client.put("max","moscow");
+        client.put("doc","usa");
 
-        sc("www.maxecommerce.com");
+        BufferedReader  bufferedReader;
+        bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String message = bufferedReader.readLine();
+        if(message.startsWith("@")){
+            System.out.println(searchNameFromMassage(message,client));
+        }
+
 
     }
 
-
-    public static void sc(String hs){
-        System.out.println("scan p:");
-        ExecutorService exec = Executors.newFixedThreadPool(Threads);
-        for(int p = MIN_P; p < MAX_P; p++){
-            var soc = new InetSocketAddress(hs,p);
-            int finalP = p;
-            exec.execute(()->{
-              var address = new InetSocketAddress(hs, finalP);
-                try(var sck = new Socket()){
-                    sck.connect(address,TIME_O);
-                    System.out.printf("hst: %s, p %d is opened\n",hs,finalP);
-                }catch (IOException ignored){
-
-                }
-            });
+    private static Object equalsNameFromMap(String s, HashMap<?,?> clients){
+        Object clientManager = null;
+        if(s != null && clients.containsKey(s)){
+            clientManager = clients.get(s);
         }
-        exec.shutdown();
-        try {
-            exec.awaitTermination(10,TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("finish");
+        return clientManager;
+    }
 
+    private static Object searchNameFromMassage(String message, HashMap<String, String> clients){
+        Object client = null;
+        StringBuilder sb = new StringBuilder();
+        int counter = 1;
+        for (int i = counter; i < message.length(); i++) {
+            sb.append(message.charAt(i));
+            client = equalsNameFromMap(sb.toString(), clients);
+        }
+        return client;
     }
 
 
