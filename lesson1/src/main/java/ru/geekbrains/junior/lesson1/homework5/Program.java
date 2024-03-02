@@ -6,22 +6,24 @@ import org.hibernate.Cache;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Program {
     public static <bufferedReader> void main(String[] args) throws IOException {
 
-        HashMap<String,String> client = new HashMap<>();
-        client.put("gor","Yerevan");
-        client.put("max","Moscow");
-        client.put("doc","USA");
+//        HashMap<String,String> client = new HashMap<>();
+//        client.put("gor","Yerevan");
+//        client.put("max","Moscow");
+//        client.put("doc","USA");
 
-        BufferedReader  bufferedReader;
-        bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        String message = bufferedReader.readLine();
-        if(message.startsWith("@")){
-            System.out.println(searchNameFromMassageV2(message,client));
-        }
+
+//        BufferedReader  bufferedReader;
+//        bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+//        String message = bufferedReader.readLine();
+//        if(message.startsWith("@")){
+//            System.out.println(searchNameFromMassageV2(message,client));
+//        }
 
 
     }
